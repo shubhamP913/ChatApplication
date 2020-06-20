@@ -19,7 +19,7 @@ class Client
             OutputStream output = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(output, true);
             
-            Thread readMessage = new Thread(new Runnable(){
+            Thread readMessage = new Thread(new Runnable(){ //responsible for reading input from the server and printing it to the console
             
                 @Override
                 public void run() {
@@ -39,7 +39,7 @@ class Client
                 }
             });
             readMessage.start();
-            Thread sendMessage = new Thread(new Runnable()
+            Thread sendMessage = new Thread(new Runnable() //responsible for reading input from the user and sending it to the server
             {
             
                 @Override
@@ -56,7 +56,7 @@ class Client
                         text = console.readLine("[" + userName + "]: ");
                         writer.println(text);
             
-                    } while (!text.equals("bye"));
+                    } while (!text.equals("logout"));
             
                     try 
                     {
