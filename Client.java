@@ -1,8 +1,7 @@
-package ChatApplication;
 
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
+import java.util.*;
 
 class Client 
 {
@@ -13,6 +12,7 @@ class Client
             
             InetAddress serverAddress = InetAddress.getByName("localhost");
             Socket socket = new Socket(serverAddress,6920);
+            System.out.println("Connected to server");
             InputStream input = socket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
  
@@ -38,33 +38,40 @@ class Client
                     }
                 }
             });
+            readMessage.start();
             Thread sendMessage = new Thread(new Runnable()
             {
             
                 @Override
                 public void run() 
                 {
-                    Console console  = System.console();
-                    while(true)
+                    Console console = System.console();
+ 
+                    String userName = console.readLine("\nEnter your name: ");
+                    writer.println(userName);
+                    String text;
+            
+                    do 
                     {
-                        
-                        try
-                        {
-                            String message = console.readLine();
-                            writer.println(message);
-                            
-                        }
-                        catch(Exception e)
-                        {
-                            System.out.println(e.toString());
-                        }
+                        text = console.readLine("[" + userName + "]: ");
+                        writer.println(text);
+            
+                    } while (!text.equals("bye"));
+            
+                    try 
+                    {
+                        socket.close();
+                    } 
+                    catch (IOException ex) 
+                    {
+                        System.out.println("Error writing to server: " + ex.getMessage());
                     }
                     
                 }
             });
 
             sendMessage.start();
-            readMessage.start();
+            
         } 
         catch (Exception e) 
         {
